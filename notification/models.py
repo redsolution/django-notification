@@ -8,7 +8,7 @@ except ImportError:
 from django.db import models
 from django.db.models.query import QuerySet
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, NoReverseMatch
 from django.template import Context
 from django.template.loader import render_to_string
 
@@ -262,11 +262,15 @@ def send_now(users, label, extra_context=None, on_site=True, sender=None,
     protocol = getattr(settings, "DEFAULT_HTTP_PROTOCOL", "http")
     current_site = Site.objects.get_current()
 
-    notices_url = u"%s://%s%s" % (
-        protocol,
-        unicode(current_site),
-        reverse("notification_notices"),
-    )
+    try:
+        notices_url = u"%s://%s%s" % (
+            protocol,
+            unicode(current_site),
+            reverse("notification_notices"),
+        )
+    except NoReverseMatch:
+        # Should work even if notification is not installed in urls.py
+        notices_url = None
 
     current_language = get_language()
 
