@@ -2,7 +2,7 @@ from notification.backends.base import NotificationBackend
 
 class WebBackend(NotificationBackend):
     slug = u'web'
-    display_name = u'E-mail'
+    display_name = u'Message displayed on page'
     formats = ['short.txt', 'full.txt']
 
     def send(self, sender, recipient, notice_type, context, on_site=False,
